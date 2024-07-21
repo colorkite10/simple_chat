@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { socket } from "../../socket";
 import NickNameInput from "../../components/Input/NickNameInput";
 import RoomNameInput from "../../components/Input/RoomNameInput";
+import styles from "./page.module.scss";
 
 const HomePage = () => {
   const [isConnected, setIsConnected] = useState(false);
@@ -38,9 +39,9 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
+    <div className={styles.container}>
       <h1>Simple Chat</h1>
-      <div>
+      <div className={styles.inputs}>
         <NickNameInput
           inputTitle="닉네임"
           placeholder="닉네임을 입력하세요."
