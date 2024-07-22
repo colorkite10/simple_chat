@@ -32,6 +32,15 @@ const Room = ({ params: { roomName } }: Params) => {
     <div>
       <h1>방: {roomName}</h1>
       <h4>{`접속 중인 사용자: ${userCount}명`}</h4>
+      <div>
+        <ul></ul>
+      </div>
+      <div>
+        <form>
+          <input placeholder="메시지를 입력하세요." type="text" />
+          <button type="submit">보내기</button>
+        </form>
+      </div>
     </div>
   );
 };
