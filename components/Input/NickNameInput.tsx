@@ -1,6 +1,6 @@
 "use client";
 
-import { socket } from "../../socket";
+import { useSocket } from "../../contexts/SocketContext";
 import styles from "./Input.module.scss";
 import { useRef } from "react";
 
@@ -12,6 +12,7 @@ interface InputProps {
 
 const NickNameInput = ({ inputTitle, placeholder, buttonText }: InputProps) => {
   const inputRef = useRef(null);
+  const socket = useSocket();
 
   const handleNameSubmit = (event) => {
     event.preventDefault();

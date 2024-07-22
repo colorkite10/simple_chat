@@ -2,7 +2,6 @@
 
 import { useRef } from "react";
 import styles from "./Input.module.scss";
-import { socket } from "../../socket";
 import { useRouter } from "next/navigation";
 
 interface InputProps {
@@ -19,8 +18,6 @@ const RoomNameInput = ({ inputTitle, placeholder, buttonText }: InputProps) => {
     event.preventDefault();
     if (inputRef.current) {
       const roomName = inputRef.current.value;
-      socket.emit("enter_room", roomName);
-      console.log(socket.id);
       router.push(`/${roomName}`);
     }
   };

@@ -1,3 +1,5 @@
+import { SocketProvider } from "../contexts/SocketContext";
+
 export const metadata = {
   title: {
     template: "%s | Simple Chat",
@@ -13,7 +15,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <SocketProvider>
+        <body>{children}</body>
+      </SocketProvider>
     </html>
   );
 }
