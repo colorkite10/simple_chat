@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useSocket } from "../../../../contexts/SocketContext";
 import styles from "./page.module.scss";
+import { EVENT } from "../../../../constants/socketEvents";
 
 interface Params {
   params: { roomName: string };
@@ -23,26 +24,26 @@ const Room = ({ params: { roomName } }: Params) => {
   //컴포넌트가 마운트될 때와 roomName 또는 socket이 변경될 때마다 실행
   useEffect(() => {
     //클라이언트가 방에 들어가겠다는 메시지를 서버에 보냄
-    socket.emit("enter_room", roomName);
+    socket.emit(EVENT.ENTER_ROOM, roomName);
 
     //서버로부터 'welcome' 이벤트를 받을 때 실행될 콜백 함수를 등록
-    socket.on("welcome", (userNickname, count) => {
+    socket.on(EVENT.WELCOME, (userNickname, count) => {
       setUserCount(count);
       addMessage(`\"${userNickname}\"님이 입장하셨습니다.`);
     });
 
-    socket.on("bye", (userLeft, count) => {
+    socket.on(EVENT.BYE, (userLeft, count) => {
       setUserCount(count);
       addMessage(`\"${userLeft}\"님이 나가셨습니다.`);
     });
 
-    socket.on("new_message", addMessage);
+    socket.on(EVENT.NEW_MESSAGE, addMessage);
 
     //컴포넌트가 언마운트될 때 'welcome' 이벤트 리스너를 제거
     return () => {
-      socket.off("welcome");
-      socket.off("bye");
-      socket.off("new_message");
+      socket.off(EVENT.WELCOME);
+      socket.off(EVENT.BYE);
+      socket.off(EVENT.NEW_MESSAGE);
     };
   }, [roomName, socket]);
 
@@ -50,7 +51,7 @@ const Room = ({ params: { roomName } }: Params) => {
     event.preventDefault();
     if (inputRef.current) {
       const message = inputRef.current.value;
-      socket.emit("new_message", message, roomName, () => {
+      socket.emit(EVENT.NEW_MESSAGE, message, roomName, () => {
         addMessage(`나: ${message}`);
       });
     }
