@@ -14,7 +14,6 @@ const Room = ({ params: { roomName } }: Params) => {
   const inputRef = useRef(null);
 
   const addMessage = (message) => {
-    console.log(message);
     const ul = document.querySelector("ul");
     const li = document.createElement("li");
     li.innerHTML = message;
@@ -29,12 +28,12 @@ const Room = ({ params: { roomName } }: Params) => {
     //서버로부터 'welcome' 이벤트를 받을 때 실행될 콜백 함수를 등록
     socket.on("welcome", (userNickname, count) => {
       setUserCount(count);
-      addMessage(`${userNickname}이 입장하셨습니다.`);
+      addMessage(`\"${userNickname}\"님이 입장하셨습니다.`);
     });
 
     socket.on("bye", (userLeft, count) => {
       setUserCount(count);
-      addMessage(`${userLeft}이 나가셨습니다.`);
+      addMessage(`\"${userLeft}\"님이 나가셨습니다.`);
     });
 
     socket.on("new_message", addMessage);
@@ -63,7 +62,7 @@ const Room = ({ params: { roomName } }: Params) => {
       <h1>방: {roomName}</h1>
       <h4>{`접속 중인 사용자: ${userCount}명`}</h4>
       <div className={styles.chats}>
-        <ul></ul>
+        <ul className={styles.ul}></ul>
       </div>
       <form className={styles.form} onSubmit={handleMessageSubmit}>
         <input
