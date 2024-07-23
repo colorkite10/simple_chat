@@ -54,11 +54,20 @@ app.prepare().then(() => {
     socket.on("enter_room", (roomName) => {
       socket.join(roomName); //클라이언트를 방에 추가
       const userCount = countUsers(roomName);
-      console.log(
-        `User ${socket.nickname} entered room ${roomName}, ${userCount}`
-      );
       socket.to(roomName).emit("welcome", socket.nickname, userCount);
       //방에 있는 다른 클라이언트에게 환영 메시지와 방에 있는 사용자 수를 보냄
+    });
+
+    socket.on("disconnecting", () => {
+      socket.rooms.forEach((room) => {
+        const userCount = countUsers(roomName);
+        socket.to(room).emit("bye", socket.nickname, userCount - 1);
+      });
+    });
+
+    socket.on("new_message", (message, room, done) => {
+      socket.to(room).emit("new_message", `${socket.nickname}: ${message}`);
+      done();
     });
   });
 

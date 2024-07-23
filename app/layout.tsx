@@ -16,7 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <SocketProvider>
-        <body>{children}</body>
+        <body style={{ maxWidth: "25rem", minWidth: "17rem", height: "90vh" }}>
+          {children}
+        </body>
       </SocketProvider>
     </html>
   );

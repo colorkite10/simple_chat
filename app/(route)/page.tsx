@@ -4,7 +4,7 @@ import styles from "./page.module.scss";
 
 const HomePage = () => {
   return (
-    <div className={styles.container}>
+    <div>
       <h1>Simple Chat</h1>
       <div className={styles.inputs}>
         <NickNameInput

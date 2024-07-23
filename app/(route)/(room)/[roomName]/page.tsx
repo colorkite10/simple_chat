@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSocket } from "../../../../contexts/SocketContext";
+import styles from "./page.module.scss";
 
 interface Params {
   params: { roomName: string };
@@ -10,6 +11,15 @@ interface Params {
 const Room = ({ params: { roomName } }: Params) => {
   const [userCount, setUserCount] = useState(0);
   const socket = useSocket();
+  const inputRef = useRef(null);
+
+  const addMessage = (message) => {
+    console.log(message);
+    const ul = document.querySelector("ul");
+    const li = document.createElement("li");
+    li.innerHTML = message;
+    ul.appendChild(li);
+  };
 
   //컴포넌트가 마운트될 때와 roomName 또는 socket이 변경될 때마다 실행
   useEffect(() => {
@@ -19,28 +29,51 @@ const Room = ({ params: { roomName } }: Params) => {
     //서버로부터 'welcome' 이벤트를 받을 때 실행될 콜백 함수를 등록
     socket.on("welcome", (userNickname, count) => {
       setUserCount(count);
-      console.log("userCount: ", count);
+      addMessage(`${userNickname}이 입장하셨습니다.`);
     });
+
+    socket.on("bye", (userLeft, count) => {
+      setUserCount(count);
+      addMessage(`${userLeft}이 나가셨습니다.`);
+    });
+
+    socket.on("new_message", addMessage);
 
     //컴포넌트가 언마운트될 때 'welcome' 이벤트 리스너를 제거
     return () => {
       socket.off("welcome");
+      socket.off("bye");
+      socket.off("new_message");
     };
   }, [roomName, socket]);
+
+  const handleMessageSubmit = (event) => {
+    event.preventDefault();
+    if (inputRef.current) {
+      const message = inputRef.current.value;
+      socket.emit("new_message", message, roomName, () => {
+        addMessage(`나: ${message}`);
+      });
+    }
+    inputRef.current.value = "";
+  };
 
   return (
     <div>
       <h1>방: {roomName}</h1>
       <h4>{`접속 중인 사용자: ${userCount}명`}</h4>
-      <div>
+      <div className={styles.chats}>
         <ul></ul>
       </div>
-      <div>
-        <form>
-          <input placeholder="메시지를 입력하세요." type="text" />
-          <button type="submit">보내기</button>
-        </form>
-      </div>
+      <form className={styles.form} onSubmit={handleMessageSubmit}>
+        <input
+          className={styles.input}
+          placeholder="메시지를 입력하세요."
+          type="text"
+          ref={inputRef}
+        />
+        <button type="submit">보내기</button>
+      </form>
     </div>
   );
 };
