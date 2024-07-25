@@ -3,6 +3,7 @@ const EVENT = {
   WELCOME: "welcome",
   BYE: "bye",
   NEW_MESSAGE: "new_message",
+  NICKNAME: "nickname",
 };
 
 export { EVENT };

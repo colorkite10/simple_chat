@@ -16,6 +16,7 @@ const RoomNameInput = ({ inputTitle, placeholder, buttonText }: InputProps) => {
 
   const handleRoomSubmit = (event) => {
     event.preventDefault();
+
     if (inputRef.current) {
       const roomName = inputRef.current.value;
       router.push(`/${roomName}`);

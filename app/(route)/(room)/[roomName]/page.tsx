@@ -10,7 +10,7 @@ interface Params {
 }
 
 const Room = ({ params: { roomName } }: Params) => {
-  const [userCount, setUserCount] = useState(0);
+  const [userCount, setUserCount] = useState();
   const socket = useSocket();
   const inputRef = useRef(null);
 
@@ -20,15 +20,19 @@ const Room = ({ params: { roomName } }: Params) => {
     li.innerHTML = message;
     ul.appendChild(li);
   };
+  console.log(socket.nickname);
 
   //컴포넌트가 마운트될 때와 roomName 또는 socket이 변경될 때마다 실행
   useEffect(() => {
     //클라이언트가 방에 들어가겠다는 메시지를 서버에 보냄
-    socket.emit(EVENT.ENTER_ROOM, roomName);
+    socket.emit(EVENT.ENTER_ROOM, roomName, (count) => {
+      setUserCount(count);
+    });
 
     //서버로부터 'welcome' 이벤트를 받을 때 실행될 콜백 함수를 등록
     socket.on(EVENT.WELCOME, (userNickname, count) => {
       setUserCount(count);
+      console.log(count);
       addMessage(`\"${userNickname}\"님이 입장하셨습니다.`);
     });
 
@@ -52,7 +56,7 @@ const Room = ({ params: { roomName } }: Params) => {
     if (inputRef.current) {
       const message = inputRef.current.value;
       socket.emit(EVENT.NEW_MESSAGE, message, roomName, () => {
-        addMessage(`나: ${message}`);
+        addMessage(`${socket.nickname}(나): ${message}`);
       });
     }
     inputRef.current.value = "";

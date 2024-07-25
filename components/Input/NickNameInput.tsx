@@ -1,5 +1,6 @@
 "use client";
 
+import { EVENT } from "../../constants/socketEvents";
 import { useSocket } from "../../contexts/SocketContext";
 import styles from "./Input.module.scss";
 import { useRef } from "react";
@@ -17,7 +18,7 @@ const NickNameInput = ({ inputTitle, placeholder, buttonText }: InputProps) => {
   const handleNameSubmit = (event) => {
     event.preventDefault();
     if (inputRef.current) {
-      socket.emit("nickname", inputRef.current.value);
+      socket.emit(EVENT.NICKNAME, inputRef.current.value);
     }
   };
 

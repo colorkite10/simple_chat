@@ -1,8 +1,6 @@
 import { createServer } from "node:http";
 import next from "next";
 import { Server } from "socket.io";
-import { EVENT } from "./constants/socketEvents";
-
 /*
 dev: 애플리케이션이 개발 모드인지 아닌지를 나타냄. 
       process.env.NODE_ENV가 "production"이 아니면 dev는 true가 된다.
@@ -52,9 +50,10 @@ app.prepare().then(() => {
     });
 
     //클라이언트가 방에 들어갈 때 호출
-    socket.on(EVENT.ENTER_ROOM, (roomName) => {
+    socket.on("enter_room", (roomName, callback) => {
       socket.join(roomName); //클라이언트를 방에 추가
       const userCount = countUsers(roomName);
+      callback(userCount);
       socket.to(roomName).emit("welcome", socket.nickname, userCount);
       //방에 있는 다른 클라이언트에게 환영 메시지와 방에 있는 사용자 수를 보냄
     });
@@ -66,9 +65,9 @@ app.prepare().then(() => {
       });
     });
 
-    socket.on(EVENT.NEW_MESSAGE, (message, room, done) => {
+    socket.on("new_message", (message, room, callback) => {
       socket.to(room).emit("new_message", `${socket.nickname}: ${message}`);
-      done();
+      callback();
     });
   });
 
