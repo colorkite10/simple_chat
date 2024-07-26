@@ -20,7 +20,6 @@ const Room = ({ params: { roomName } }: Params) => {
     li.innerHTML = message;
     ul.appendChild(li);
   };
-  console.log(socket.nickname);
 
   //컴포넌트가 마운트될 때와 roomName 또는 socket이 변경될 때마다 실행
   useEffect(() => {
@@ -32,7 +31,6 @@ const Room = ({ params: { roomName } }: Params) => {
     //서버로부터 'welcome' 이벤트를 받을 때 실행될 콜백 함수를 등록
     socket.on(EVENT.WELCOME, (userNickname, count) => {
       setUserCount(count);
-      console.log(count);
       addMessage(`\"${userNickname}\"님이 입장하셨습니다.`);
     });
 

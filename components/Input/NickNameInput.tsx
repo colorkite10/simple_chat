@@ -18,7 +18,9 @@ const NickNameInput = ({ inputTitle, placeholder, buttonText }: InputProps) => {
   const handleNameSubmit = (event) => {
     event.preventDefault();
     if (inputRef.current) {
-      socket.emit(EVENT.NICKNAME, inputRef.current.value);
+      const inputNickname = inputRef.current.value;
+      socket.emit(EVENT.NICKNAME, inputNickname);
+      socket.nickname = inputNickname;
     }
   };
 

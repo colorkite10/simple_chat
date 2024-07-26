@@ -35,7 +35,7 @@ app.prepare().then(() => {
   //소켓 연결 처리
   //wsServer.on("connection", (socket) => { ... }): 새로운 클라이언트가 연결될 때마다 호출
   wsServer.on("connection", (socket) => {
-    console.log("socket connected!", socket.id);
+    console.log("socket connected!");
 
     socket["nickname"] = "익명";
 
@@ -60,7 +60,7 @@ app.prepare().then(() => {
 
     socket.on("disconnecting", () => {
       socket.rooms.forEach((room) => {
-        const userCount = countUsers(roomName);
+        const userCount = countUsers(room);
         socket.to(room).emit("bye", socket.nickname, userCount - 1);
       });
     });
