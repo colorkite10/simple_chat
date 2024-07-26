@@ -32,22 +32,6 @@ app.prepare().then(() => {
     return wsServer.sockets.adapter.rooms.get(roomName)?.size;
   };
 
-  const publicRooms = () => {
-    const { rooms, sids } = wsServer.sockets.adapter;
-
-    const publicRooms = [];
-    rooms.forEach((_, key) => {
-      if (sids.get(key) === undefined) {
-        publicRooms.push({
-          roomName: key,
-          roomUsersCount: countUsers(key),
-        });
-      }
-    });
-
-    return publicRooms;
-  };
-
   //소켓 연결 처리
   //wsServer.on("connection", (socket) => { ... }): 새로운 클라이언트가 연결될 때마다 호출
   wsServer.on("connection", (socket) => {
@@ -73,7 +57,6 @@ app.prepare().then(() => {
       callback(userCount);
       socket.to(roomName).emit("welcome", socket.nickname, userCount);
       //방에 있는 다른 클라이언트에게 환영 메시지와 방에 있는 사용자 수를 보냄
-      wsServer.sockets.emit("room_change", publicRooms());
     });
 
     socket.on("disconnecting", () => {
@@ -81,7 +64,6 @@ app.prepare().then(() => {
         const userCount = countUsers(room);
         socket.to(room).emit("bye", socket.nickname, userCount - 1);
       });
-      wsServer.sockets.emit("room_change", publicRooms());
     });
 
     socket.on("new_message", (message, room, callback) => {

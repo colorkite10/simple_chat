@@ -1,5 +1,6 @@
 import NickNameInput from "../../components/Input/NickNameInput";
 import RoomNameInput from "../../components/Input/RoomNameInput";
+import Rooms from "../../components/Rooms/Rooms";
 import styles from "./page.module.scss";
 
 const HomePage = () => {
@@ -17,6 +18,9 @@ const HomePage = () => {
           placeholder="방 제목을 입력하세요."
           buttonText="입력"
         />
+      </div>
+      <div>
+        <Rooms />
       </div>
     </div>
   );
